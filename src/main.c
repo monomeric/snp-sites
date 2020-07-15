@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                 strncpy(output_filename, optarg, FILENAME_MAX);
                 break;
             case 'R':
-                strncpy(reference_filename, optarg, FILENAME_MAX)
+                strncpy(reference_filename, optarg, FILENAME_MAX);
                 file_reference = 1;
                 break;
             case 'h':
@@ -137,18 +137,18 @@ int main(int argc, char **argv)
                                                   output_multi_fasta_file,
                                                   output_vcf_file, output_phylip_file,
                                                   output_filename, output_reference, pure_mode, output_monomorphic,
-                                                  file_reference);
+                                                  file_reference, reference_filename);
         } else if (output_reference) {
             generate_snp_sites_with_ref(multi_fasta_filename,
                                         output_multi_fasta_file,
                                         output_vcf_file, output_phylip_file,
                                         output_filename,
-                                        file_reference);
+                                        file_reference,reference_filename);
         } else {
             generate_snp_sites(multi_fasta_filename, output_multi_fasta_file,
                                output_vcf_file, output_phylip_file,
                                output_filename,
-                               file_reference);
+                               file_reference,reference_filename);
         }
     } else {
         print_usage();

@@ -21,12 +21,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
+#include <zlib.h>
 #include "kseq.h"
 #include "vcf.h"
 #include "alignment-file.h"
 #include "snp-sites.h"
 #include "phylib-of-snp-sites.h"
 #include "fasta-of-snp-sites.h"
+
+KSEQ_INIT(gzFile, gzread)
 
 char **bases_for_snps;
 
@@ -68,10 +71,10 @@ static int generate_snp_sites_generic(char filename[],
         }
 
         if(file_reference) {
-          File fp;
+          gzFile fp;
           kseq_t *seq;
 
-          fp = open(reference_filename, "r");
+          fp = gzopen(reference_filename, "r");
           seq = kseq_init(fp);
 
           if (kseq_read(seq) < 0) {

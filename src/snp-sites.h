@@ -31,14 +31,16 @@ int generate_snp_sites(char filename[],
                        int output_vcf_file,
                        int output_phylip_file,
                        char output_filename[],
-                       int file_reference);
+                       int file_reference,
+                       char referece_filename[]);
 
 int generate_snp_sites_with_ref(char filename[],
                                 int output_multi_fasta_file,
                                 int output_vcf_file,
                                 int output_phylip_file,
                                 char output_filename[],
-                                int file_reference);
+                                int file_reference,
+                                char referece_filename[]);
 
 int generate_snp_sites_with_ref_pure_mono(char filename[],
                                           int output_multi_fasta_file,
@@ -48,7 +50,8 @@ int generate_snp_sites_with_ref_pure_mono(char filename[],
                                           int output_reference,
                                           int pure_mode,
                                           int output_monomorphic,
-                                          int file_reference);
+                                          int file_reference,
+                                          char referece_filename[]);
 
 void count_constant_sites(char multi_fasta_filename[], char filename[]);
 

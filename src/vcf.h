@@ -27,13 +27,13 @@ void output_vcf_header(FILE *vcf_file_pointer, char **sequence_names, int number
 
 void
 create_vcf_file(char filename[], int snp_locations[], int number_of_snps, char **bases_for_snps, char **sequence_names,
-                int number_of_samples, size_t length_of_genome, char reference_sequence[]);
+                int number_of_samples, size_t length_of_genome, char reference_sequence[], char reference_name[]);
 
 void output_vcf_snps(FILE *vcf_file_pointer, char **bases_for_snps, int *snp_locations, int number_of_snps,
-                     int number_of_samples, char reference_sequence[]);
+                     int number_of_samples, char reference_sequence[], char reference_name[]);
 
 void output_vcf_row(FILE *vcf_file_pointer, char *bases_for_snp, int snp_location, int number_of_samples,
-                    char reference_sequence[]);
+                    char reference_sequence[], char reference_name[]);
 
 void output_vcf_row_samples_bases(FILE *vcf_file_pointer, char reference_base, char *alt_bases, char *bases_for_snp,
                                   int number_of_samples);
