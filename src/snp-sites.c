@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
+#include "kseq.h"
 #include "vcf.h"
 #include "alignment-file.h"
 #include "snp-sites.h"
@@ -35,7 +36,8 @@ static int generate_snp_sites_generic(char filename[],
                                       int output_phylip_file,
                                       char output_filename[],
                                       int output_reference, int pure_mode,
-                                      int output_monomorphic)
+                                      int output_monomorphic,
+                                      int file_reference, char reference_filename[])
 {
     int i;
     detect_snps(filename, pure_mode, output_monomorphic);
@@ -65,9 +67,26 @@ static int generate_snp_sites_generic(char filename[],
             strcat(vcf_output_filename, ".vcf");
         }
 
-        create_vcf_file(vcf_output_filename, get_snp_locations(), get_number_of_snps(), bases_for_snps,
-                        get_sequence_names(), get_number_of_samples(), get_length_of_genome(),
-                        get_pseudo_reference_sequence());
+        if(file_reference) {
+          File fp;
+          kseq_t *seq;
+
+          fp = open(reference_filename, "r");
+          seq = kseq_init(fp);
+
+          if (kseq_read(seq) < 0) {
+            fprintf(stderr, "ERROR: cannot read reference in %s\n", reference_filename);
+            exit(EXIT_FAILURE);
+          }
+          
+          create_vcf_file(vcf_output_filename, get_snp_locations(), get_number_of_snps(), bases_for_snps,
+                          get_sequence_names(), get_number_of_samples(), get_length_of_genome(),
+                          seq->seq.s, seq->comment.s);
+        }
+        else
+          create_vcf_file(vcf_output_filename, get_snp_locations(), get_number_of_snps(), bases_for_snps,
+                          get_sequence_names(), get_number_of_samples(), get_length_of_genome(),
+                          get_pseudo_reference_sequence(),"");
     }
 
 
@@ -111,20 +130,20 @@ static int generate_snp_sites_generic(char filename[],
 
 int generate_snp_sites(char filename[], int output_multi_fasta_file,
                        int output_vcf_file, int output_phylip_file,
-                       char output_filename[])
+                       char output_filename[], int file_reference, char reference_filename[])
 {
     return generate_snp_sites_generic(filename, output_multi_fasta_file,
                                       output_vcf_file, output_phylip_file,
-                                      output_filename, 0, 0, 0);
+                                      output_filename, 0, 0, 0, file_reference, reference_filename);
 }
 
 int generate_snp_sites_with_ref(char filename[], int output_multi_fasta_file,
                                 int output_vcf_file, int output_phylip_file,
-                                char output_filename[])
+                                char output_filename[], int file_reference, char reference_filename[])
 {
     return generate_snp_sites_generic(filename, output_multi_fasta_file,
                                       output_vcf_file, output_phylip_file,
-                                      output_filename, 1, 0, 0);
+                                      output_filename, 1, 0, 0, file_reference, reference_filename);
 }
 
 int generate_snp_sites_with_ref_pure_mono(char filename[],
@@ -134,11 +153,14 @@ int generate_snp_sites_with_ref_pure_mono(char filename[],
                                           char output_filename[],
                                           int output_reference,
                                           int pure_mode,
-                                          int output_monomorphic)
+                                          int output_monomorphic,
+                                          int file_reference,
+                                          char reference_filename[])
 {
     return generate_snp_sites_generic(filename, output_multi_fasta_file,
                                       output_vcf_file, output_phylip_file,
-                                      output_filename, output_reference, pure_mode, output_monomorphic);
+                                      output_filename, output_reference, pure_mode, output_monomorphic,
+                                      file_reference, reference_filename);
 }
 
 void count_constant_sites(char multi_fasta_filename[], char output_filename[])

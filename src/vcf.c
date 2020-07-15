@@ -30,7 +30,7 @@
 
 void
 create_vcf_file(char filename[], int snp_locations[], int number_of_snps, char **bases_for_snps, char **sequence_names,
-                int number_of_samples, size_t length_of_genome, char pseudo_reference_sequence[])
+                int number_of_samples, size_t length_of_genome, char reference_sequence[], char reference_name[])
 {
     FILE *vcf_file_pointer;
     char *base_filename;
@@ -40,18 +40,18 @@ create_vcf_file(char filename[], int snp_locations[], int number_of_snps, char *
     vcf_file_pointer = fopen(base_filename, "w");
     output_vcf_header(vcf_file_pointer, sequence_names, number_of_samples, (int) length_of_genome);
     output_vcf_snps(vcf_file_pointer, bases_for_snps, snp_locations, number_of_snps, number_of_samples,
-                    pseudo_reference_sequence);
+                    reference_sequence, reference_name);
     fclose(vcf_file_pointer);
     free(base_filename);
 }
 
 void output_vcf_snps(FILE *vcf_file_pointer, char **bases_for_snps, int *snp_locations, int number_of_snps,
-                     int number_of_samples, char pseudo_reference_sequence[])
+                     int number_of_samples, char reference_sequence[], char reference_name[])
 {
     int i;
     for (i = 0; i < number_of_snps; i++) {
         output_vcf_row(vcf_file_pointer, bases_for_snps[i], snp_locations[i], number_of_samples,
-                       pseudo_reference_sequence);
+                       reference_sequence, reference_name);
     }
 }
 
@@ -70,9 +70,9 @@ void output_vcf_header(FILE *vcf_file_pointer, char **sequence_names, int number
 }
 
 void output_vcf_row(FILE *vcf_file_pointer, char *bases_for_snp, int snp_location, int number_of_samples,
-                    char pseudo_reference_sequence[])
+                    char reference_sequence[], char reference_name[])
 {
-    char reference_base = pseudo_reference_sequence[snp_location];
+    char reference_base = reference_sequence[snp_location];
     if (reference_base == '\0') {
         fprintf(stderr, "Couldnt get the reference base for coordinate %d\n", snp_location);
         fflush(stderr);
@@ -80,7 +80,7 @@ void output_vcf_row(FILE *vcf_file_pointer, char *bases_for_snp, int snp_locatio
     }
 
     // Chromosome
-    fprintf(vcf_file_pointer, "1\t");
+    fprintf(vcf_file_pointer, "%s\t", (char*) reference_name);
 
     // Position
     fprintf(vcf_file_pointer, "%d\t", (int) snp_location + 1);

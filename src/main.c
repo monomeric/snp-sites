@@ -39,6 +39,7 @@ static void print_usage()
     printf(" -v     output a VCF file\n");
     printf(" -p     output a phylip file\n");
     printf(" -o STR specify an output filename [STDOUT]\n");
+    printf(" -R STR specify reference sequence (FASTA)\n");
     printf(" -c     only output columns containing exclusively ACGT\n");
     printf(" -C     only output count of constant sites (suitable for IQ-TREE -fconst) and nothing else\n");
     printf(" -b     output monomorphic sites, used for BEAST\n");
@@ -65,6 +66,7 @@ int main(int argc, char **argv)
 {
     char multi_fasta_filename[FILENAME_MAX] = {""};
     char output_filename[FILENAME_MAX] = {"/dev/stdout"};
+    char reference_filename[FILENAME_MAX] = {""};
 
     int c;
     int index;
@@ -73,10 +75,11 @@ int main(int argc, char **argv)
     int output_phylip_file = 0;
     int output_reference = 0;
     int output_constant_site_counts = 0;
+    int file_reference = 0;
     int pure_mode = 0;
     int output_monomorphic = 0;
 
-    while ((c = getopt(argc, argv, "mvrbpcCo:V")) != -1)
+    while ((c = getopt(argc, argv, "mvrbpcCo:R:V")) != -1)
         switch (c) {
             case 'm':
                 output_multi_fasta_file = 1;
@@ -105,6 +108,10 @@ int main(int argc, char **argv)
             case 'o':
                 strncpy(output_filename, optarg, FILENAME_MAX);
                 break;
+            case 'R':
+                strncpy(reference_filename, optarg, FILENAME_MAX)
+                file_reference = 1;
+                break;
             case 'h':
                 print_usage();
                 exit(EXIT_SUCCESS);
@@ -129,16 +136,19 @@ int main(int argc, char **argv)
             generate_snp_sites_with_ref_pure_mono(multi_fasta_filename,
                                                   output_multi_fasta_file,
                                                   output_vcf_file, output_phylip_file,
-                                                  output_filename, output_reference, pure_mode, output_monomorphic);
+                                                  output_filename, output_reference, pure_mode, output_monomorphic,
+                                                  file_reference);
         } else if (output_reference) {
             generate_snp_sites_with_ref(multi_fasta_filename,
                                         output_multi_fasta_file,
                                         output_vcf_file, output_phylip_file,
-                                        output_filename);
+                                        output_filename,
+                                        file_reference);
         } else {
             generate_snp_sites(multi_fasta_filename, output_multi_fasta_file,
                                output_vcf_file, output_phylip_file,
-                               output_filename);
+                               output_filename,
+                               file_reference);
         }
     } else {
         print_usage();
