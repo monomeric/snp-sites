@@ -1,5 +1,5 @@
 # SNP-sites - reference sequence mod
-Rapidly extracts SNPs from a multi-FASTA alignment.
+Rapidly extracts SNPs from a multi-FASTA alignment, either with respect to an implicit pseudo-reference or given reference sequence.
 
 [![Build Status](https://travis-ci.org/sanger-pathogens/snp-sites.png?branch=master)](https://travis-ci.org/sanger-pathogens/snp-sites)   
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-brightgreen.svg)](https://github.com/sanger-pathogens/snp-sites/blob/master/LICENSE)   
