@@ -84,7 +84,7 @@ static int generate_snp_sites_generic(char filename[],
           
           create_vcf_file(vcf_output_filename, get_snp_locations(), get_number_of_snps(), bases_for_snps,
                           get_sequence_names(), get_number_of_samples(), get_length_of_genome(),
-                          seq->seq.s, seq->comment.s);
+                          seq->seq.s, seq->name.s);
         }
         else
           create_vcf_file(vcf_output_filename, get_snp_locations(), get_number_of_snps(), bases_for_snps,
