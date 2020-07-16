@@ -103,6 +103,7 @@ This program finds snp sites from a multi fasta alignment file.
  -v     output a VCF file
  -p     output a phylip file
  -o STR specify an output filename [STDOUT]
+ -R STR specify reference sequence (FASTA)
  -c     only output columns containing exclusively ACGT
  -b     output monomorphic sites, used for BEAST
  -h     this help message
